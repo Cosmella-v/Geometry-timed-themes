@@ -3,8 +3,68 @@
 using namespace geode::prelude;
 #include "time.hpp"
 #include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/SimplePlayer.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
+
+
+
+class $modify(SimplePlayer) {
+	struct Fields {
+		CCSprite* m_jollyhat;
+	};
+	void updatePlayerFrame(int p0,IconType icon) {
+		SimplePlayer::updatePlayerFrame(p0,icon);
+		if (!this->m_fields->m_jollyhat) {
+			return;
+		};
+		CCSprite* sp = this->m_firstLayer;
+		this->m_fields->m_jollyhat->setParent(sp);
+		this->m_fields->m_jollyhat->setAnchorPoint({0.05,0});
+		this->m_fields->m_jollyhat->setScale(0.8);
+		this->m_fields->m_jollyhat->setVisible(timeUtil::JollyHats);
+		this->m_fields->m_jollyhat->setPosition( ccp(-8,sp->getContentHeight() / 2) );
+		switch (icon) {
+    	case IconType::Ball:
+			this->m_fields->m_jollyhat->setPosition(ccp(-4,sp->getContentHeight() / 2) );
+			break;
+		case IconType::Wave:
+			this->m_fields->m_jollyhat->setVisible(false);
+			break;
+		case IconType::Swing:
+			this->m_fields->m_jollyhat->setScale(0.75);
+			this->m_fields->m_jollyhat->setPosition(ccp(0,sp->getContentHeight() / 2) );
+			break;
+		case IconType::Ship:
+		case IconType::Jetpack:
+		case IconType::Ufo:
+			this->m_fields->m_jollyhat->setVisible(false);
+			break;
+		default:
+			break;
+	}
+
+	};
+	CCSprite* createjoll() {
+		CCSprite* sp = this->m_firstLayer;
+		CCSprite* re =  CCSprite::create("JollyHat.png"_spr);
+		re->setAnchorPoint({0.05,0});
+		re->setScale(0.8);
+		re->setPosition(ccp(-8,sp->getContentHeight() / 2) );
+		re->setVisible(timeUtil::JollyHats);
+		return re;
+	}
+	bool init(int p0) {
+		bool in = SimplePlayer::init(p0);
+		if (!in) {
+			return in;
+		};
+		CCSprite* sp = this->m_firstLayer;
+		this->m_fields->m_jollyhat = createjoll();
+		sp->addChild(this->m_fields->m_jollyhat);
+		return in;
+	};
+};
 
 $on_mod(Loaded) {
 	timeUtil::updateTime();

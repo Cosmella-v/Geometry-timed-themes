@@ -21,6 +21,8 @@ public:
             
             if (Mod::get()->getSettingValue<bool>("hats")) {
                 JollyHats = (month == 12);
+            } else {
+                JollyHats = false;
             }
 
             chimas = (month == 12 || month == 11);
