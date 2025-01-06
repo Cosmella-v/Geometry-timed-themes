@@ -28,7 +28,7 @@ class $modify (MenuLayer)
         if (!MenuLayer::init())
             return false;
            
-		   if (timeUtil::snowy) {
+		   if (timeUtil::chimas && (Mod::get()->getSettingValue<bool>("snow")) ) {
 		    auto snow = CCParticleSnow::create();
             snow->setID("snow"_spr);
             this->addChild(snow, 420);

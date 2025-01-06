@@ -4,7 +4,7 @@
 class timeUtil {
 public:
     static inline bool JollyHats = false;
-    static inline bool snowy = false;
+    static inline bool chimas = false;
 
     static void updateTime() {
         auto now = std::chrono::system_clock::now();
@@ -23,6 +23,6 @@ public:
                 JollyHats = (month == 12);
             }
 
-            snowy = (month == 12 || month == 11);
+            chimas = (month == 12 || month == 11);
         };
 };

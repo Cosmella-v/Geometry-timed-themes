@@ -21,9 +21,15 @@
 			"type": "bool",
 			"default": false
 		},
+		"snow": {
+			"name": "Enable Snow effect",
+			"description": "Toggles Snow effect if it is winter.",
+			"type": "bool",
+			"default": true
+		},
 		"hats": {
 			"name": "Enable Icon Hats",
-			"description": "Toggles hats on icons if it is winter always.",
+			"description": "Toggles hats on icons if it is winter.",
 			"type": "bool",
 			"default": true
 		}
