@@ -1,0 +1,33 @@
+{
+	"geode": "4.1.1",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "viper.geometry_timed_themes",
+	"name": "Timed themes",
+	"version": "v1.0.0",
+	"resources": {
+		"sprites": [
+			"christmas/**/*.png"
+		]
+	},
+	"settings": {
+		"Winter": {
+			"name": "Force Winter Mode",
+			"description": "Toggles Winter always.",
+			"type": "bool",
+			"default": false
+		},
+		"hats": {
+			"name": "Enable Icon Hats",
+			"description": "Toggles hats on icons if it is winter always.",
+			"type": "bool",
+			"default": true
+		}
+	},
+	"developer": "Viper",
+	"description": "Theme the game depending on the current e.g christmas theming in December"
+}
