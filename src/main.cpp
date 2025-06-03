@@ -1,163 +1,92 @@
-#include <Geode/Geode.hpp>
+#include "time.hpp"
+#include "CCImageSprite.hpp"
+#include <Geode/modify/MenuLayer.hpp>
+#include <Geode/modify/Modify.hpp>
 
 using namespace geode::prelude;
-#include "time.hpp"
-#include <Geode/modify/PlayerObject.hpp>
-#include <Geode/modify/SimplePlayer.hpp>
-#include <Geode/modify/MenuLayer.hpp>
-#include <Geode/modify/CCScheduler.hpp>
 
+bool MidnightAlpse = false;
+file::FilePickOptions::Filter textFilter;
+file::FilePickOptions fileOptions;
 
-
-class $modify(SimplePlayer) {
-	struct Fields {
-		CCSprite* m_jollyhat;
-	};
-	void updatePlayerFrame(int p0,IconType icon) {
-		SimplePlayer::updatePlayerFrame(p0,icon);
-		if (!this->m_fields->m_jollyhat) {
-			return;
-		};
-		CCSprite* sp = this->m_firstLayer;
-		this->m_fields->m_jollyhat->setParent(sp);
-		this->m_fields->m_jollyhat->setAnchorPoint({0.05,0});
-		this->m_fields->m_jollyhat->setScale(0.8);
-		this->m_fields->m_jollyhat->setVisible(timeUtil::JollyHats);
-		this->m_fields->m_jollyhat->setPosition( ccp(-8,sp->getContentHeight() / 2) );
-		switch (icon) {
-    	case IconType::Ball:
-			this->m_fields->m_jollyhat->setPosition(ccp(-4,sp->getContentHeight() / 2) );
-			break;
-		case IconType::Wave:
-			this->m_fields->m_jollyhat->setVisible(false);
-			break;
-		case IconType::Swing:
-			this->m_fields->m_jollyhat->setScale(0.75);
-			this->m_fields->m_jollyhat->setPosition(ccp(0,sp->getContentHeight() / 2) );
-			break;
-		case IconType::Ship:
-		case IconType::Jetpack:
-		case IconType::Ufo:
-			this->m_fields->m_jollyhat->setVisible(false);
-			break;
-		default:
-			break;
-	}
-
-	};
-	CCSprite* createjoll() {
-		CCSprite* sp = this->m_firstLayer;
-		CCSprite* re =  CCSprite::create("JollyHat.png"_spr);
-		re->setAnchorPoint({0.05,0});
-		re->setScale(0.8);
-		re->setPosition(ccp(-8,sp->getContentHeight() / 2) );
-		re->setVisible(timeUtil::JollyHats);
-		return re;
-	}
-	bool init(int p0) {
-		bool in = SimplePlayer::init(p0);
-		if (!in) {
-			return in;
-		};
-		CCSprite* sp = this->m_firstLayer;
-		this->m_fields->m_jollyhat = createjoll();
-		sp->addChild(this->m_fields->m_jollyhat);
-		return in;
-	};
-};
-
-$on_mod(Loaded) {
-	timeUtil::updateTime();
-}
-
-class $modify(MyCCScheduler, CCScheduler) {
-	static void onModify(auto& self) {
-		(void) self.setHookPriority("CCScheduler::update", 1);
-	}
-	void update(float dt) {
-		CCScheduler::update(dt);
-		timeUtil::updateTime(); // update time every fram
-	}
-};
-
-
-class $modify (MenuLayer)
+$on_mod(Loaded)
 {
-    virtual bool init()
-    {
-        if (!MenuLayer::init())
-            return false;
-           
-		   if (timeUtil::chimas && (Mod::get()->getSettingValue<bool>("snow")) ) {
-		    auto snow = CCParticleSnow::create();
-            snow->setID("snow"_spr);
-            this->addChild(snow, 420);
-		   }
+	textFilter.description = "Image files";
+	textFilter.files = {"*.png", "*.jpeg"};
+	fileOptions.filters.push_back(textFilter);
+	time::updateTime();
+}
+class $modify(CustomLayer, MenuLayer)
+{
+	virtual bool init()
+	{
+		if (!MenuLayer::init())
+			return false;
 
-        return true;
-    }
-};
+		time::updateTime(); // update the time before all the menu stuff
 
+		// snow check
+		if (time::IsEnabled("Menu-Snow"))
+		{
+			// other mods adding snow
+			if (!this->getChildByType<CCParticleSnow>(0))
+			{
+				auto snow = CCParticleSnow::create();
+				snow->setID("snow"_spr);
+				this->addChild(snow, 420);
+			}
+		}
+		// pride icon
+		if (time::IsEnabled("Pride-Icon"))
+		{
+			// do i exist?
+			if (auto geodebtn = this->getChildByIDRecursive("geode.loader/geode-button"))
+			{
+				// covert this to my fav type
+				CCMenuItemSpriteExtra *geodeButton = typeinfo_cast<CCMenuItemSpriteExtra *>(
+					geodebtn);
+				// no crashing plz thanks
+				if (geodeButton->m_pNormalImage)
+				{
+					CCSprite *Geode_2025 = CCSprite::create("Geode-2025.png"_spr);
+					Geode_2025->setScale(0.2);
+					Geode_2025->setPositionX(geodeButton->m_pNormalImage->getPositionX());
+					Geode_2025->setPositionY(geodeButton->m_pNormalImage->getPositionY());
+					geodeButton->m_pNormalImage->addChild(Geode_2025, 5);
+					auto overlay = CCLayerColor::create({0, 0, 0, 150});
+					overlay->setOpacity(0);
+					overlay->runAction(CCFadeTo::create(.25f, 185));
+					overlay->setZOrder(500);
+					overlay->setID("overlay"_spr);
+					int ZOrder = geodeButton->getZOrder();
+					geodeButton->setZOrder(overlay->getZOrder() + 1);
+					this->addChild(overlay);
+					geodeButton->runAction(CCSequence::create(
+						CCDelayTime::create(0.5f),
+						CCEaseElasticOut::create(CCScaleTo::create(0.75f, 2.0f), 2.0f),
+						CCTintTo::create(0.15f, 246, 255, 0),
+						CCTintTo::create(0.15f, 255, 255, 255),
+						CCDelayTime::create(0.1f),
+						CCTintTo::create(0.15f, 246, 255, 0),
+						CCTintTo::create(0.15f, 255, 255, 255),
+						CCEaseElasticIn::create(CCScaleTo::create(0.871, 2), 2.0f),
+						LambdaAction::create([=]()
+											 {  
+						geodebtn->setZOrder(ZOrder);
+						overlay->removeFromParentAndCleanup(true);
+						file::pick(file::PickMode::OpenFile, { Mod::get()->getResourcesDir(), { textFilter } }).listen([=](Result<std::filesystem::path>* res) {
+						if (res->isOk()) {
+								std::filesystem::path path = res->unwrap();
+								CCImageSprite* x = CCImageSprite::createWithImage(path.string());
+								this->addChild(x);
 
-class $modify(PlayerObject) {
-	struct Fields {
-		CCSprite* m_jollyhat;
-	};
-	int getCurrentPlayerState() {
-        if(this->isInNormalMode()) return 0;
-        else if(this->m_isShip) return 1;
-        else if(this->m_isBall) return 2;
-        else if(this->m_isBird) return 3;
-        else if(this->m_isDart) return 4;
-        else if(this->m_isRobot) return 5;
-        else if(this->m_isSpider) return 6;
-        else if(this->m_isSwing) return 7;
+							}
+						}); }),
+						nullptr));
+				}
+			};
+		}
 
-        return -1;
-    }
-	virtual void update(float p0) {
-		PlayerObject::update(p0);
-		CCSprite* sp = this->m_iconSprite;
-		this->m_fields->m_jollyhat->setParent(sp);
-		this->m_fields->m_jollyhat->setAnchorPoint({0.05,0});
-		this->m_fields->m_jollyhat->setScale(0.8);
-		this->m_fields->m_jollyhat->setVisible(timeUtil::JollyHats);
-		this->m_fields->m_jollyhat->setPosition( ccp(-8,sp->getContentHeight() / 2) );
-		switch (this->getCurrentPlayerState()) {
-    	case 2:
-			this->m_fields->m_jollyhat->setPosition(ccp(-4,sp->getContentHeight() / 2) );
-			break;
-		case 4:
-			this->m_fields->m_jollyhat->setVisible(false);
-			break;
-		case 7:
-			this->m_fields->m_jollyhat->setScale(0.75);
-			this->m_fields->m_jollyhat->setPosition(ccp(0,sp->getContentHeight() / 2) );
-			break;
-		default:
-			break;
+		return true;
 	}
-
-	};
-	CCSprite* createjoll() {
-		CCSprite* sp = this->m_iconSprite;
-		CCSprite* re =  CCSprite::create("JollyHat.png"_spr);
-		re->setAnchorPoint({0.05,0});
-		re->setScale(0.8);
-		re->setPosition(ccp(-8,sp->getContentHeight() / 2) );
-		re->setVisible(timeUtil::JollyHats);
-		return re;
-	}
-	bool init(int p0, int p1, GJBaseGameLayer* p2, CCLayer* p3, bool p4) {
-		bool in = PlayerObject::init(p0,p1,p2,p3,p4);
-		if (!in) {
-			return in;
-		};
-		CCSprite* sp = this->m_iconSprite;
-		CCSpriteBatchNode* sp223 = this->m_robotBatchNode;
-		CCSpriteBatchNode* sp23 = this->m_spiderBatchNode;
-		this->m_fields->m_jollyhat = createjoll();
-		sp->addChild(this->m_fields->m_jollyhat);
-		return in;
-	};
 };

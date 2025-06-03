@@ -1,39 +1,51 @@
 {
-	"geode": "4.1.1",
+	"geode": "4.5.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
 		"mac": "2.2074",
 		"ios": "2.2074"
 	},
-	"id": "viper.geometry_timed_themes",
-	"name": "Timed themes",
-	"version": "v1.0.0",
 	"resources": {
 		"sprites": [
-			"christmas/**/*.png"
+			"Sprites/**/*.png"
 		]
 	},
 	"settings": {
-		"Winter": {
+		"Force-Winter": {
 			"name": "Force Winter Mode",
 			"description": "Toggles Winter always.",
 			"type": "bool",
 			"default": false
 		},
-		"snow": {
+		"Menu-Snow": {
 			"name": "Enable Snow effect",
 			"description": "Toggles Snow effect if it is winter.",
 			"type": "bool",
 			"default": true
 		},
-		"hats": {
+		"WinterHats": {
 			"name": "Enable Icon Hats",
 			"description": "Toggles hats on icons if it is winter.",
 			"type": "bool",
 			"default": true
+		},
+		"Force-Pride-mode": {
+			"name": "Force Pride Mode",
+			"description": "Toggles Pride always.",
+			"type": "bool",
+			"default": false
+		},
+		"Pride-Icon": {
+			"name": "Enable Geode 2025 (Pride)",
+			"description": "Toggles 2025 pride icon.",
+			"type": "bool",
+			"default": true
 		}
 	},
+	"id": "viper.themed_dash",
+	"name": "Themed Dash",
+	"version": "v1.0.0",
 	"developer": "Viper",
-	"description": "Theme the game depending on the current e.g christmas theming in December"
+	"description": "Want more theming in gd, Thought the snow on the main menu with mega hack is cool. all in one themes"
 }
