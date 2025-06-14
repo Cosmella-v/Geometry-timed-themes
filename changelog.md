@@ -1,2 +1,3 @@
 # 1.0.0
-- be jolly!
+- megahack snow
+- pride month theming

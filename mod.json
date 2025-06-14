@@ -9,6 +9,9 @@
 	"resources": {
 		"sprites": [
 			"Sprites/**/*.png"
+		],
+		"files": [
+			"Default/**/*.png"
 		]
 	},
 	"settings": {
@@ -30,6 +33,12 @@
 			"type": "bool",
 			"default": true
 		},
+		"Force-Posters": {
+			"name": "Force Posters in Normal Mode",
+			"description": "Toggles pride posters without Pride Mode.",
+			"type": "bool",
+			"default": false
+		},
 		"Force-Pride-mode": {
 			"name": "Force Pride Mode",
 			"description": "Toggles Pride always.",
@@ -41,11 +50,18 @@
 			"description": "Toggles 2025 pride icon.",
 			"type": "bool",
 			"default": true
+		},
+		"Posters": {
+			"name": "Enable Posters in Pride",
+			"description": "Toggles pride posters.",
+			"type": "bool",
+			"default": true
 		}
 	},
 	"id": "viper.themed_dash",
 	"name": "Themed Dash",
-	"version": "v1.0.0",
+	"links": {"source": "https://github.com/Cosmella-v/Geometry-timed-themes"},
+	"version": "v1.0.0-beta.1",
 	"developer": "Viper",
 	"description": "Want more theming in gd, Thought the snow on the main menu with mega hack is cool. all in one themes"
 }
