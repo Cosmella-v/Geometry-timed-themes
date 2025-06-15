@@ -1,15 +1,17 @@
 #include "time.hpp"
 #include "CCBannerItem.hpp"
+#include "geodehookAdditon.hpp"
 #include "ImageItems/SaveSystem.hpp"
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/Modify.hpp>
+#include <random>
+#include <Geode/modify/CreatorLayer.hpp>
 
 using namespace geode::prelude;
 
-bool MidnightAlpse = false;
-
 $on_mod(Loaded)
 {
+
 	time::updateTime();
 	// auto obj = matjson::makeObject({std::make_pair("Paths", matjson::Value(std::vector<matjson::Value>{
 	//															matjson::Value("C:/Users/momo2/Downloads/Yipeee.png")}))});

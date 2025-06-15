@@ -15,6 +15,18 @@
 		]
 	},
 	"settings": {
+		"AprilFools": {
+			"name": "Enable April Fools Mode",
+			"description": "Toggles April Fools to be gettable.",
+			"type": "bool",
+			"default": true
+		},
+		"Force-April-Fools": {
+			"name": "Force April Fools Mode",
+			"description": "Toggles April Fools always.",
+			"type": "bool",
+			"default": false
+		},
 		"Force-Winter": {
 			"name": "Force Winter Mode",
 			"description": "Toggles Winter always.",
@@ -61,7 +73,7 @@
 	"id": "viper.themed_dash",
 	"name": "Themed Dash",
 	"links": {"source": "https://github.com/Cosmella-v/Geometry-timed-themes"},
-	"version": "v1.0.0-beta.1",
+	"version": "v1.0.0-beta.2",
 	"developer": "Viper",
 	"description": "Want more theming in gd, Thought the snow on the main menu with mega hack is cool. all in one themes"
 }

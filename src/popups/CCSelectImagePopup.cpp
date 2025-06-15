@@ -126,6 +126,8 @@ void CCSelectImagePopup::OpenPopup(CCObject *Self)
         std::filesystem::path path = res->unwrap();
         matjson::Value response = SaveSystem_class->loadfile("SavedImages");
         std::string item = path.string();
+        if (response.get("Paths"))
+        {
         auto& p = response["Paths"].asArray().unwrap();
 
         bool exists = std::any_of(p.begin(), p.end(), [&](const auto& v) {
@@ -138,6 +140,12 @@ void CCSelectImagePopup::OpenPopup(CCObject *Self)
             SaveSystem_class->writefile("SavedImages", response);
             reload();
         }
+    } else {
+        auto noItems = matjson::makeObject({std::make_pair("Paths", matjson::Value(std::vector<matjson::Value>{
+															matjson::Value(item)}))});
+       SaveSystem_class->writefile("SavedImages", noItems);
+       reload();
+    }
     } });
 }
 CCImageSelectNode *CCSelectImagePopup::itemNew(matjson::Value item)
@@ -179,7 +187,7 @@ CCImageSelectNode *CCSelectImagePopup::itemNew(matjson::Value item)
 }
 void CCSelectImagePopup::reload()
 {
-     m_content->m_contentLayer->removeAllChildren();
+    m_content->m_contentLayer->removeAllChildren();
 
     for (const auto item : SaveSystem_class->DefaultPaths.asArray().unwrap())
     {
@@ -187,24 +195,27 @@ void CCSelectImagePopup::reload()
     }
     // screams in array
     matjson::Value response = SaveSystem_class->loadfile("SavedImages");
-    const matjson::Value paths = response["Paths"].asArray().unwrap();
-    for (auto item : paths)
+    if (response.get("Paths"))
     {
-        CCImageSelectNode * itemNode = itemNew(item);
-        itemNode->m_garbcan = [=]
+        const matjson::Value paths = response["Paths"].asArray().unwrap();
+        for (auto item : paths)
         {
-            matjson::Value response = SaveSystem_class->loadfile("SavedImages");
-            auto &p = response["Paths"].asArray().unwrap();
-
-            auto it = std::find(p.begin(), p.end(), item);
-            if (it != p.end())
+            CCImageSelectNode *itemNode = itemNew(item);
+            itemNode->m_garbcan = [=]
             {
-                p.erase(it);
-                SaveSystem_class->writefile("SavedImages", response);
-            }
-            itemNode->removeFromParentAndCleanup(true);
-            reload();
-        };
+                matjson::Value response = SaveSystem_class->loadfile("SavedImages");
+                auto &p = response["Paths"].asArray().unwrap();
+
+                auto it = std::find(p.begin(), p.end(), item);
+                if (it != p.end())
+                {
+                    p.erase(it);
+                    SaveSystem_class->writefile("SavedImages", response);
+                }
+                itemNode->removeFromParentAndCleanup(true);
+                reload();
+            };
+        }
     }
     SortList(m_searchBar->getString());
 }
