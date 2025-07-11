@@ -1,5 +1,5 @@
 {
-	"geode": "4.5.0",
+	"geode": "4.6.2",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -73,7 +73,13 @@
 	"id": "viper.themed_dash",
 	"name": "Themed Dash",
 	"links": {"source": "https://github.com/Cosmella-v/Geometry-timed-themes"},
-	"version": "v1.0.0-beta.3",
+	"version": "v1.0.0-beta.4",
+	"dependencies" : {
+		"geode.node-ids": {
+            "version": ">=v1.20.1",
+            "importance": "required"
+        }
+	},
 	"developer": "Viper",
 	"description": "Thought that gd was boring without timed themes, This is the mod for you! Add christmas hats, April fools events and even pride month!"
 }
